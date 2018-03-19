@@ -4,6 +4,8 @@ $(document).ready(function () {
     let input=$("#input");
     let ul=$("#ul");
 
+    refreshTodos();
+
     function refreshTodos() {
       ul.empty();
       $.get('/todo',function (data) {
