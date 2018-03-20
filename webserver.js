@@ -5,7 +5,9 @@ const express=require('express');
 const path=require('path');
 const fs=require('fs');
 const app=express();
-const file=path.join(__dirname,"todo.json");
+const file=path.join(__dirname,"todo.txt");
+
+ refreshTodos();
 
 app.listen(3333,function () {
     console.log("Server started on http://localhost:3333")
@@ -26,17 +28,33 @@ app.get('/addTodo',function (request,response) {
 
 function addTodos(task) {
    todos.push(task);
-   let json=JSON.stringify("task",todos);
    fs.writeFile(
        file,
-       json,
+       task+',',
+       {
+           flag:'a'  // 'a' for append  // 'w' for write
+       },
        function (err) {
            if(err){
                throw err;
            }
            else{
-               console.log("File written");
+               console.log("File Written");
            }
        }
    )
+}
+function refreshTodos() {
+    // Read todos from file
+    fs.readFile(file,function (err,data) {
+        if(err){
+            throw err;
+        }
+        else{
+            let str=data.toString();
+            let arr=str.split(',');
+            arr.splice(arr.length-1,1);
+            todos=arr;
+        }
+    })
 }
